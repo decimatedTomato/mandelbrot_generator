@@ -230,9 +230,9 @@ void init_Shader(char* shader_filepath) {
 }
 
 void init_Uniforms() {
-    location_time = glGetUniformLocation(current_shader, "u_time");
-    assert(location_time != -1);
-    glUniform1f(location_time, glfwGetTime());    
+    // location_time = glGetUniformLocation(current_shader, "u_time");
+    // assert(location_time != -1);
+    // glUniform1f(location_time, glfwGetTime());    
 
     location_resolution = glGetUniformLocation(current_shader, "u_resolution");
     assert(location_resolution != -1);
@@ -285,7 +285,7 @@ bool render_frame() {
     glfwGetWindowSize(window, &window_width, &window_height); //TODO Change to use callback function
     glViewport(0, 0, window_width, window_height);
     glUniform2f(location_resolution, window_width, window_height);
-    glUniform1f(location_time, glfwGetTime());
+    // glUniform1f(location_time, glfwGetTime());
 
     /* Draw the bound buffer With an index buffer SQUARE */
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
