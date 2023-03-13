@@ -22,6 +22,7 @@ unsigned int current_shader;
 // Uniform locations
 int location_time;
 int location_resolution;
+int location_constant;
 
 // Windows
 GLFWwindow* window;
@@ -229,7 +230,7 @@ void init_Shader(char* shader_filepath) {
     glUseProgram(current_shader);
 }
 
-void init_Uniforms() {
+void init_Uniforms(float u_constant[2]) {
     // location_time = glGetUniformLocation(current_shader, "u_time");
     // assert(location_time != -1);
     // glUniform1f(location_time, glfwGetTime());    
@@ -239,6 +240,10 @@ void init_Uniforms() {
     glfwGetWindowSize(window, &window_width, &window_height); //TODO Change to use callback function
     glViewport(0, 0, window_width, window_height);
     glUniform2f(location_resolution, window_width, window_height);
+
+    location_constant = glGetUniformLocation(current_shader, "u_constant");
+    assert(location_constant != -1);
+    glUniform2f(location_constant, u_constant[0], u_constant[1]);
 }
 
 void take_user_input() {
