@@ -8,6 +8,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "simulation.h"
+
 // Window size definition (should not be in this file)
 #define MONITOR_WIDTH 1920
 #define MONITOR_HEIGHT 1080
@@ -213,10 +215,10 @@ void init_Shader(char* filepath_fragment, char* filepath_vertex) {
     glUseProgram(current_shader);
 }
 
-void init_Uniforms(float u_constant[2]) {
-    // location_time = glGetUniformLocation(current_shader, "u_time");
-    // assert(location_time != -1);
-    // glUniform1f(location_time, glfwGetTime());    
+void init_Uniforms() {
+    location_time = glGetUniformLocation(current_shader, "u_time");
+    assert(location_time != -1);
+    glUniform1f(location_time, glfwGetTime());    
 
     location_resolution = glGetUniformLocation(current_shader, "u_resolution");
     // assert(location_resolution != -1);
@@ -226,7 +228,6 @@ void init_Uniforms(float u_constant[2]) {
 
     location_constant = glGetUniformLocation(current_shader, "u_constant");
     assert(location_constant != -1);
-    glUniform2f(location_constant, u_constant[0], u_constant[1]);
 }
 
 void take_user_input() {
@@ -250,7 +251,7 @@ void take_user_input() {
     }
     if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
         if(!just_refreshed) {
-            // restart();
+            restart();
             just_refreshed = true;
         }
     } else just_refreshed = false;
@@ -265,6 +266,10 @@ void take_user_input() {
     }
 }
 
+void update_u_constant(float u_constant[2]) {
+    glUniform2f(location_constant, u_constant[0], u_constant[1]);
+}
+
 bool render_frame() {
     /* Render here */
     glClear(GL_COLOR_BUFFER_BIT);
@@ -273,7 +278,7 @@ bool render_frame() {
     glfwGetWindowSize(window, &window_width, &window_height); //TODO Change to use callback function
     glViewport(0, 0, window_width, window_height);
     glUniform2f(location_resolution, window_width, window_height);
-    // glUniform1f(location_time, glfwGetTime());
+    glUniform1f(location_time, glfwGetTime());
 
     /* Draw the bound buffer With an index buffer SQUARE */
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);

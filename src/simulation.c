@@ -26,25 +26,33 @@ int window_width = DEFAULT_WINDOW_WIDTH;
 int window_height = DEFAULT_WINDOW_HEIGHT;
 bool is_fullscreen = false;
 
+float u_constant[2];
+
 float rand_float() { return (float)rand() / ((float)RAND_MAX); }
 
+/* Sets new random values for u_constant */
+void restart() {
+    u_constant[0] = rand_float();
+    u_constant[1] = rand_float();
+    printf("Constant of %f + %fi\n", u_constant[0], u_constant[1]);
+    update_u_constant(u_constant);
+}
 
 int main() {
     long long unsigned int t = time(NULL);
     printf("Random seed %llu\n", t);
     srand(t);
 
-    float u_constant[2] ={ rand_float(), rand_float() };
-    printf("Constant of %f + %fi\n", u_constant[0], u_constant[1]);
-    // Zoom level
-    // Left/right/up/down panning
 
     if(init_GLFW(window_width, window_height, "Simulation") == -1) exit(1);
     init_Debug_Callback();
     init_Quad();
 
     init_Shader(FRAGMENT_FILEPATH, VERTEX_FILEPATH);
-    init_Uniforms(u_constant);
+    init_Uniforms();
+    restart();
+    // Zoom level
+    // Left/right/up/down panning
 
     /* Loop until the user closes the window */
     bool keep_running = true;
