@@ -100,22 +100,6 @@ char* readFile(const char* filepath) {
 	return buffer;
 }
 
-static ShaderProgramSource ParseShader(char* source) {
-    ShaderProgramSource ss;
-    char *p = source;
-    while((p = strstr(p, "#shader "))) {
-        *p = '\0';
-        p += 8;
-        if(strncmp("vertex", p, 6) == 0) ss.VertexSource = p + 7;
-        else if(strncmp("fragment", p, 8) == 0) ss.FragmentSource = p + 9;
-        else {
-            printf("Shader type not recognized :%s:", p);
-            exit(1);
-        }
-    }
-    return ss;
-}
-
 static unsigned int CompileShader(unsigned int type, const char* src) {
     unsigned int id = glCreateShader(type);
     glShaderSource(id, 1, &src, NULL);
@@ -220,13 +204,12 @@ void init_Quad() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), square_indices, GL_STATIC_DRAW);
 }
 
-void init_Shader(char* shader_filepath) {
-    char* shader_contents = readFile(shader_filepath);
-    ShaderProgramSource source = ParseShader(shader_contents);
-    // printf("VERTEX SHADER\n%s\n", source.VertexSource);
-    // printf("FRAGMENT SHADER\n%s\n", source.FragmentSource);
-    current_shader = CreateShader(source.VertexSource, source.FragmentSource);
-    free(shader_contents);
+void init_Shader(char* filepath_fragment, char* filepath_vertex) {
+    char* shader_fragment = readFile(filepath_fragment);
+    char* shader_vertex = readFile(filepath_vertex);
+    current_shader = CreateShader(shader_vertex, shader_fragment);
+    free(shader_fragment);
+    free(shader_vertex);
     glUseProgram(current_shader);
 }
 
@@ -236,7 +219,7 @@ void init_Uniforms(float u_constant[2]) {
     // glUniform1f(location_time, glfwGetTime());    
 
     location_resolution = glGetUniformLocation(current_shader, "u_resolution");
-    assert(location_resolution != -1);
+    // assert(location_resolution != -1);
     glfwGetWindowSize(window, &window_width, &window_height); //TODO Change to use callback function
     glViewport(0, 0, window_width, window_height);
     glUniform2f(location_resolution, window_width, window_height);

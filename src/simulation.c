@@ -11,7 +11,8 @@
 #define DEFAULT_WINDOW_HEIGHT 480
 
 // USER DEFINITIONS
-#define SHADER_FILE_PATH "res/shaders/mandelbrot.shader"
+#define FRAGMENT_FILEPATH "res/shaders/mandelbrot.glsl"
+#define VERTEX_FILEPATH "res/shaders/vertex.glsl"
 #define THRESHOLD 4.0
 #define MAX_ITERATIONS 50
 
@@ -34,6 +35,7 @@ int main() {
     srand(t);
 
     float u_constant[2] ={ rand_float(), rand_float() };
+    printf("Constant of %f + %fi\n", u_constant[0], u_constant[1]);
     // Zoom level
     // Left/right/up/down panning
 
@@ -41,7 +43,7 @@ int main() {
     init_Debug_Callback();
     init_Quad();
 
-    init_Shader(SHADER_FILE_PATH);
+    init_Shader(FRAGMENT_FILEPATH, VERTEX_FILEPATH);
     init_Uniforms(u_constant);
 
     /* Loop until the user closes the window */
